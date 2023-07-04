@@ -4,28 +4,42 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "@/firebase/initFirebase";
 import { Toaster, toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 export default function Home() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const { login, logado } = useAuth();
 
-  const login = async (e: any) => {
+  const fazerLogin = async (e: any) => {
     e.preventDefault();
-
-    try {
-      await signInWithEmailAndPassword(auth, email, senha);
-      toast.success("Login feito com sucesso!");
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.toString());
+    if (login) {
+      await login(email, senha);
     }
+
+    router.push("/projetos");
   };
+
+  // const login = async (e: any) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     await signInWithEmailAndPassword(auth, email, senha);
+  //     toast.success("Login feito com sucesso!");
+  //     router.push("/projetos");
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     toast.error(error.toString());
+  //   }
+  // };
 
   return (
     <main className="flex h-screen justify-center items-center">
       <Toaster position="bottom-center" />
       <form
-        onSubmit={login}
+        onSubmit={fazerLogin}
         className="flex w-full max-w-md flex-col bg-white dark:bg-zinc-900 p-8 rounded-lg shadow-xl gap-8"
       >
         <label className="text-lg font-medium">

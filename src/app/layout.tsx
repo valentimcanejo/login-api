@@ -1,3 +1,4 @@
+import AuthProvider from "@/context/AuthProvider";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="h-screen w-screen">{children}</div>
+        <AuthProvider>
+          <div className="h-screen w-screen">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );
