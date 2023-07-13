@@ -33,11 +33,11 @@ async function createToken(userFirebase: UserCredential): Promise<User> {
 
 function gerenciarCookie(logado: string) {
   if (logado) {
-    Cookies.set("digitaliza-auth", logado, {
+    Cookies.set("login-api", logado, {
       expires: 7, // 7 dias
     });
   } else {
-    Cookies.remove("digitaliza-auth");
+    Cookies.remove("login-api");
   }
 }
 
