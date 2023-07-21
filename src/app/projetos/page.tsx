@@ -1,6 +1,6 @@
 "use client";
 
-import db from "@/firebase/initFirebase";
+import db, { auth } from "@/firebase/initFirebase";
 import useAuth from "@/hooks/useAuth";
 import { collection, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
@@ -13,6 +13,7 @@ const Projetos = () => {
   const [listaProjetos, setListaProjetos] = useState<any>([]);
   const [token, setToken] = useState("");
   const searchParams = useSearchParams()!;
+  const userEmail = auth.currentUser?.email;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -26,18 +27,23 @@ const Projetos = () => {
 
   const sendToken = async (link: string) => {
     try {
-      const customToken = await fetch("http://localhost:3001/api/createToken", {
-        method: "GET",
+      const customToken = await fetch(
+        `${link}/api/createToken?userEmail=${userEmail}`,
+        {
+          method: "GET",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await customToken.json();
       const token = data.customToken.toString();
 
       const queryString = createQueryString("token", token);
-      const url = link + "?" + queryString;
+      const url = link + "/login" + "?" + queryString;
       console.log(token);
 
       // Abre a rota em outra aba
